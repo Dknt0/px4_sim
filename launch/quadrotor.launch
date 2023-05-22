@@ -1,0 +1,97 @@
+<?xml version="1.0"?>
+<launch>
+    <!-- MAVROS posix SITL environment launch script -->
+
+    <!-- 滤波器和世界 filter and world -->
+    <arg name="est" default="ekf2"/>
+    <!-- <arg name="world" default="$(find mavlink_sitl_gazebo)/worlds/outdoor1_light.world"/> -->
+    <!-- <arg name="world" default="$(find mavlink_sitl_gazebo)/worlds/indoor1.world"/> -->
+    <arg name="world" default="$(find px4_sim)/worlds/my_world.sdf"/>
+
+    <!-- rviz config -->
+    <!-- <arg name="rviz_config" default="-d $(find px4_sim)/config/config.rviz" /> -->
+    <arg name="rviz_config" default="-d $(find px4_sim)/config/rtabmap.rviz" />
+    
+    <!-- gz设置 gazebo configs -->
+    <arg name="gui" default="true"/>
+    <arg name="debug" default="false"/>
+    <arg name="verbose" default="false"/>
+    <arg name="paused" default="false"/>
+
+    <!-- 打开gz加载世界 Gazebo sim -->
+    <include file="$(find gazebo_ros)/launch/empty_world.launch">
+        <arg name="gui" value="$(arg gui)"/>
+        <arg name="world_name" value="$(arg world)"/>
+        <arg name="debug" value="$(arg debug)"/>
+        <arg name="verbose" value="$(arg verbose)"/>
+        <arg name="paused" value="$(arg paused)"/>
+    </include>
+
+    <!-- 生成无人机 iris_0 -->
+    <group ns="iris_0">
+        <!-- MAVROS and vehicle configs -->
+        <arg name="ID" value="0"/>
+        <arg name="ID_in_group" value="0"/>
+        <arg name="fcu_url" default="udp://:24540@localhost:34580"/>
+        
+        <!-- PX4 SITL and vehicle spawn -->
+        <include file="$(find px4_sim)/launch/single_vehicle_spawn.launch">
+            <arg name="x" value="0"/>
+            <arg name="y" value="0"/>
+            <arg name="z" value="0"/>
+            <!-- 角度的单位是度 -->
+            <arg name="R" value="1.57"/>
+            <arg name="P" value="0"/>
+            <arg name="Y" value="1.57"/>
+            <arg name="vehicle" value="iris"/>
+            <!-- 实际生成的是sdf这个模型 -->
+            <arg name="sdf" value="iris_realsense_camera"/>
+            <arg name="mavlink_udp_port" value="18570"/>
+            <arg name="mavlink_tcp_port" value="4560"/>
+            <arg name="ID" value="$(arg ID)"/>
+            <arg name="ID_in_group" value="$(arg ID_in_group)"/>
+        </include>
+
+        <!-- MAVROS -->
+        <include file="$(find mavros)/launch/px4.launch">
+            <arg name="fcu_url" value="$(arg fcu_url)"/>
+            <arg name="gcs_url" value=""/>
+            <arg name="tgt_system" value="$(eval 1 + arg('ID'))"/>
+            <arg name="tgt_component" value="1"/>
+        </include>
+    </group>
+
+    <!-- rviz 显示 -->
+    <!-- <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" /> -->
+    <node name="rviz" pkg="rviz" type="rviz" args="$(arg rviz_config)" />
+    
+    <!-- VINS-Fusion -->
+    <node pkg="vins" type="vins_node" name="vins_estimator" args="$(find px4_sim)/config/px4_sitl_stereo_imu_config.yaml">
+        <remap from="/iris_0/imu_gazebo" to="/iris_0/imu_gazebo" />
+        <remap from="/iris_0/stereo_camera/left/image_raw" to="/iris_0/stereo_camera/left/image_raw" />
+        <remap from="/iris_0/stereo_camera/right/image_raw" to="/iris_0/stereo_camera/right/image_raw" />
+    </node>
+
+    <!-- pose transfer for ego -->
+    <node pkg="px4_sim" type="vins_camera_transfer" name="vins_camera_transfer" output="screen" />
+
+    <!-- RTAB-Map SLAM with octomap -->
+    <node pkg="tf" type="static_transform_publisher" name="iris_0_camera_link_to_depth"
+        args="0.0 0.0 0 0.0 0.0 0.0 /camera_link /depth_camera_base 40" />
+    <arg name="clip_distance"             default="-2"/>
+    <arg name="use_rviz"                  default="false"/>
+    <arg name="use_rtabmapviz"            default="true"/>
+    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+        <arg name="rtabmap_args"       value="--delete_db_on_start"/>
+        <arg name="depth_topic"        value="/iris_0/realsense/depth_camera/depth/image_raw"/>
+        <arg name="frame_id"           value="camera_link"/>
+        <arg name="visual_odometry"    value="false"/>
+        <arg name="odom_topic"         value="/vins_estimator/odometry"/>
+        <arg name="rgb_topic"          value="/iris_0/realsense/depth_camera/color/image_raw"/>
+        <arg name="camera_info_topic"  value="/iris_0/realsense/depth_camera/color/camera_info"/>
+        <arg name="queue_size"         value="200"/>
+        <arg name="rviz"               value="$(arg use_rviz)"/>
+        <arg name="rtabmapviz"         value="$(arg use_rtabmapviz)"/>
+    </include>
+
+</launch>
