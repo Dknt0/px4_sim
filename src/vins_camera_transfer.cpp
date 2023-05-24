@@ -38,6 +38,15 @@ int main(int argc, char** argv) {
     geometry_msgs::PoseStamped camera_pose;
     camera_pose.header.frame_id = "world";
 
+    // init
+    camera_pose.pose.position.x = 0;
+    camera_pose.pose.position.y = 0;
+    camera_pose.pose.position.z = 0;
+    camera_pose.pose.orientation.w = 1;
+    camera_pose.pose.orientation.x = 0;
+    camera_pose.pose.orientation.y = 0;
+    camera_pose.pose.orientation.z = 0;
+    
     // 将 Odometry 转发为 PoseStamped
     ros::Subscriber vins_sub = nh.subscribe<nav_msgs::Odometry>("vins_estimator/camera_pose", 10, 
         [&](const nav_msgs::Odometry::ConstPtr& msg) {

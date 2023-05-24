@@ -7,9 +7,9 @@ Panels:
         - /Global Options1
         - /TF1/Frames1
         - /Image1
-        - /ColorOccupancyGrid1
+        - /Info1
         - /DepthCloud1/Auto Size1
-      Splitter Ratio: 0.40833333134651184
+      Splitter Ratio: 0.4110580086708069
     Tree Height: 411
   - Class: rviz/Selection
     Name: Selection
@@ -89,7 +89,7 @@ Visualization Manager:
       Frames:
         All Enabled: false
         base_link:
-          Value: true
+          Value: false
         base_link_frd:
           Value: true
         body:
@@ -101,6 +101,8 @@ Visualization Manager:
         map:
           Value: true
         map_ned:
+          Value: true
+        odmo_2d:
           Value: true
         odom:
           Value: true
@@ -115,12 +117,13 @@ Visualization Manager:
       Show Axes: true
       Show Names: true
       Tree:
-        base_link:
-          base_link_frd:
-            {}
         map:
           map_ned:
             {}
+          odmo_2d:
+            base_link:
+              base_link_frd:
+                {}
           world:
             body:
               camera_link:
@@ -133,7 +136,7 @@ Visualization Manager:
       Value: true
     - Class: rviz/Image
       Enabled: true
-      Image Topic: /vins_estimator/image_track
+      Image Topic: /camera/rgb/image_rect_color
       Max Value: 1
       Median window: 5
       Min Value: 0
@@ -229,12 +232,12 @@ Visualization Manager:
       Class: rviz/Map
       Color Scheme: map
       Draw Behind: false
-      Enabled: true
+      Enabled: false
       Name: Map
       Topic: /rtabmap/grid_map
       Unreliable: false
       Use Timestamp: false
-      Value: true
+      Value: false
     - Alpha: 1
       Auto Size:
         Auto Size Factor: 1
@@ -271,34 +274,6 @@ Visualization Manager:
       Use Fixed Frame: true
       Use rainbow: true
       Value: true
-    - Alpha: 1
-      Autocompute Intensity Bounds: true
-      Autocompute Value Bounds:
-        Max Value: 10
-        Min Value: -10
-        Value: true
-      Axis: Z
-      Channel Name: intensity
-      Class: rviz/PointCloud2
-      Color: 255; 255; 255
-      Color Transformer: RGB8
-      Decay Time: 0
-      Enabled: true
-      Invert Rainbow: false
-      Max Color: 255; 255; 255
-      Min Color: 0; 0; 0
-      Name: PointCloud2
-      Position Transformer: XYZ
-      Queue Size: 10
-      Selectable: true
-      Size (Pixels): 3
-      Size (m): 0.029999999329447746
-      Style: Points
-      Topic: /rtabmap/cloud_map
-      Unreliable: false
-      Use Fixed Frame: true
-      Use rainbow: true
-      Value: true
   Enabled: true
   Global Options:
     Background Color: 48; 48; 48
@@ -323,7 +298,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 15.77638053894043
+      Distance: 19.784069061279297
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -331,17 +306,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 0.6735389232635498
-        Y: 0.39042097330093384
-        Z: 0.7925137281417847
+        X: 3.7120180130004883
+        Y: 38.66312026977539
+        Z: -0.1581905335187912
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.33479779958724976
+      Pitch: 0.5997970700263977
       Target Frame: base_link
-      Yaw: 4.301805019378662
+      Yaw: 2.483184576034546
     Saved: ~
 Window Geometry:
   Displays:
@@ -361,5 +336,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1273
-  X: 107
-  Y: 27
+  X: 359
+  Y: 118

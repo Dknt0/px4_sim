@@ -1,0 +1,54 @@
+<?xml version="1.0"?>
+<launch>
+
+    <!-- rviz config -->
+    <!-- <arg name="rviz_config" default="-d $(find px4_sim)/config/config.rviz" /> -->
+    <arg name="rviz_config" default="-d $(find px4_sim)/config/config_3d_slam.rviz" />
+
+    <!-- rviz 显示 -->
+    <!-- <node pkg="joint_state_publisher" type="joint_state_publisher" name="joint_state_publisher" /> -->
+    <node name="rviz_3d" pkg="rviz" type="rviz" args="$(arg rviz_config)" />
+    
+    <!-- VINS-Fusion -->
+    <node pkg="vins" type="vins_node" name="vins_estimator" args="$(find px4_sim)/config/px4_sitl_stereo_imu_config.yaml">
+        <remap from="/iris_0/imu_gazebo" to="/iris_0/imu_gazebo" />
+        <remap from="/iris_0/stereo_camera/left/image_raw" to="/iris_0/stereo_camera/left/image_raw" />
+        <remap from="/iris_0/stereo_camera/right/image_raw" to="/iris_0/stereo_camera/right/image_raw" />
+    </node>
+
+    <!-- pose transfer for ego -->
+    <!-- <node pkg="px4_sim" type="vins_camera_transfer" name="vins_camera_transfer" output="screen" /> -->
+
+    <!-- RTAB-Map SLAM with octomap -->
+    <node pkg="tf" type="static_transform_publisher" name="iris_0_camera_link_to_depth"
+        args="0.0 0.0 0 0.0 0.0 0.0 /camera_link /depth_camera_base 40" />
+    <arg name="clip_distance"             default="-2"/>
+    <arg name="use_rviz"                  default="true"/>
+    <arg name="use_rtabmapviz"            default="false"/>
+    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+        <arg name="rtabmap_args"       value="--delete_db_on_start"/>
+        <arg name="depth_topic"        value="/iris_0/realsense/depth_camera/depth/image_raw"/>
+        <arg name="frame_id"           value="camera_link"/>
+        <arg name="visual_odometry"    value="false"/>
+        <arg name="odom_topic"         value="/vins_estimator/odometry"/>
+        <arg name="rgb_topic"          value="/iris_0/realsense/depth_camera/color/image_raw"/>
+        <arg name="camera_info_topic"  value="/iris_0/realsense/depth_camera/color/camera_info"/>
+        <arg name="queue_size"         value="200"/>
+        <arg name="rviz"               value="$(arg use_rviz)"/>
+        <arg name="rtabmapviz"         value="$(arg use_rtabmapviz)"/>
+    </include>
+
+    <!-- Depth image to laserscan -->
+    <!-- <node pkg="depthimage_to_laserscan" type="depthimage_to_laserscan" name="depthimage_to_laserscan">
+        <remap from="image" to="/iris_0/realsense/depth_camera/depth/image_raw" />
+        <param name="output_frame_id" value="body"  />
+    </node> -->
+
+    <!-- 坐标转换，雷达点云基坐标 -->
+    <!-- <node pkg="tf" type="static_transform_publisher" name="laser_to_body"
+        args="0.0 0.0 0.1 0.0 0.0 0.0 /laser /body 80" /> -->
+
+    <!-- <include file="$(find px4_sim)/launch/move_base.launch" /> -->
+
+
+</launch>

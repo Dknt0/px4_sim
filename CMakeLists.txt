@@ -14,9 +14,11 @@ find_package(catkin REQUIRED COMPONENTS
   mavros_msgs
   geometry_msgs
   cv_bridge
+  tf
   tf2
   tf2_ros
   tf2_geometry_msgs
+  behaviortree_cpp_v3
 )
 
 ## System dependencies are found with CMake's conventions
@@ -219,11 +221,13 @@ include_directories(
   ${catkin_INCLUDE_DIRS}
 )
 
+# MAVROS 控制测试
 add_executable(offb_test src/offb_test.cpp)
 target_link_libraries(offb_test
   ${catkin_LIBRARIES}
 )
 
+# 控制类库
 add_library(OffboardControl
   src/OffboardControl.cpp
 )
@@ -232,13 +236,34 @@ target_link_libraries(OffboardControl
   ${OpenCV_LIBS}
 )
 
+# 控制节点
 add_executable(ctr_node src/ctr_node.cpp)
 target_link_libraries(ctr_node
   ${catkin_LIBRARIES}
   OffboardControl
 )
 
+# VINS 坐标转换
 add_executable(vins_camera_transfer src/vins_camera_transfer.cpp)
 target_link_libraries(vins_camera_transfer
   ${catkin_LIBRARIES}
+)
+
+# move_base Action 请求
+add_executable(move_base_target src/move_base_target.cpp)
+target_link_libraries(move_base_target
+  ${catkin_LIBRARIES}
+)
+
+# 无人机位姿真值获取
+add_executable(odmo_gt_pub src/odmo_gt_pub.cpp)
+target_link_libraries(odmo_gt_pub
+  ${catkin_LIBRARIES}
+)
+
+# 行为树
+add_executable(bt_node src/bt_node.cpp)
+target_link_libraries(bt_node
+  ${catkin_LIBRARIES}
+  OffboardControl
 )

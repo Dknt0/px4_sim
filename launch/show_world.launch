@@ -21,27 +21,22 @@
     </include>
 
     <!-- 生成无人机 iris_0 -->
-    <group ns="iris_0">
-        <!-- MAVROS and vehicle configs -->
-        <arg name="ID" value="0"/>
-        <arg name="ID_in_group" value="0"/>
-        <arg name="fcu_url" default="udp://:24540@localhost:34580"/>
-        
-        <!-- PX4 SITL and vehicle spawn -->
-        <include file="$(find px4_sim)/launch/single_vehicle_spawn.launch">
-            <arg name="x" value="0"/>
-            <arg name="y" value="-40"/>
-            <arg name="z" value="0"/>
-            <arg name="R" value="0"/>
-            <arg name="P" value="0"/>
-            <arg name="Y" value="0"/>
-            <arg name="vehicle" value="iris"/>
-            <!-- 实际生成的是sdf这个模型 -->
-            <arg name="sdf" value="iris_realsense_camera"/>
-            <arg name="mavlink_udp_port" value="18570"/>
-            <arg name="mavlink_tcp_port" value="4560"/>
-            <arg name="ID" value="$(arg ID)"/>
-            <arg name="ID_in_group" value="$(arg ID_in_group)"/>
-        </include>
-    </group>
+
 </launch>
+<node pkg="tf" type="static_transform_publisher" name="iris_0_camera_link_to_depth"
+        args="0.0 0.0 0 0.0 0.0 0.0 /camera_link /depth_camera_base 40" />
+    <arg name="clip_distance"             default="-2"/>
+    <arg name="use_rviz"                  default="false"/>
+    <arg name="use_rtabmapviz"            default="false"/>
+    <include file="$(find rtabmap_ros)/launch/rtabmap.launch">
+        <arg name="rtabmap_args"       value="--delete_db_on_start"/>
+        <arg name="depth_topic"        value="/iris_0/realsense/depth_camera/depth/image_raw"/>
+        <arg name="frame_id"           value="camera_link"/>
+        <arg name="visual_odometry"    value="false"/>
+        <arg name="odom_topic"         value="/vins_estimator/odometry"/>
+        <arg name="rgb_topic"          value="/iris_0/realsense/depth_camera/color/image_raw"/>
+        <arg name="camera_info_topic"  value="/iris_0/realsense/depth_camera/color/camera_info"/>
+        <arg name="queue_size"         value="200"/>
+        <arg name="rviz"               value="$(arg use_rviz)"/>
+        <arg name="rtabmapviz"         value="$(arg use_rtabmapviz)"/>
+    </include>
