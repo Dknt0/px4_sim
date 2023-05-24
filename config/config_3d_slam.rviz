@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /TF1
         - /TF1/Frames1
         - /Image1
         - /Info1
@@ -91,7 +92,7 @@ Visualization Manager:
         base_link:
           Value: false
         base_link_frd:
-          Value: true
+          Value: false
         body:
           Value: true
         camera_link:
@@ -103,7 +104,7 @@ Visualization Manager:
         map_ned:
           Value: true
         odmo_2d:
-          Value: true
+          Value: false
         odom:
           Value: true
         odom_ned:
@@ -314,9 +315,9 @@ Visualization Manager:
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.5997970700263977
+      Pitch: 0.28979718685150146
       Target Frame: base_link
-      Yaw: 2.483184576034546
+      Yaw: 1.6750011444091797
     Saved: ~
 Window Geometry:
   Displays:
@@ -336,5 +337,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1273
-  X: 359
-  Y: 118
+  X: 801
+  Y: 111

@@ -10,6 +10,7 @@
 #include "behaviortree_cpp_v3/loggers/bt_zmq_publisher.h"
 
 #define DRONE_PREFIX "iris_0"
+#define BT_FLAG BOLDGREEN << "[BehaviorTree] " << RESET
 
 using namespace BT;
 
@@ -43,7 +44,7 @@ int main(int argc, char** argv) {
     // 起飞
     factory.registerSimpleCondition("Takeoff",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "Takeoff" << RESET << flush;
+            cout << BT_FLAG << YELLOW << "Takeoff" << RESET << flush;
 
             cin.get();
             offb_ctr.arm();
@@ -56,7 +57,7 @@ int main(int argc, char** argv) {
     // 飞向树林  理论上不需要避障，可以飞快点
     factory.registerSimpleCondition("FlyToWood",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "FlyToWood" << RESET << endl;
+            cout << BT_FLAG << YELLOW << "FlyToWood" << RESET << endl;
             offb_ctr.path_planning(0, -37, 0);
 
             return BT::NodeStatus::SUCCESS;
@@ -65,7 +66,7 @@ int main(int argc, char** argv) {
     // 飞往目标点1 避障
     factory.registerSimpleCondition("FlyToPosition1",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "FlyToPosition1" << RESET << endl;
+            cout << BT_FLAG << YELLOW << "FlyToPosition1" << RESET << endl;
 
             offb_ctr.path_planning(10, -30, 0);
             return BT::NodeStatus::SUCCESS;
@@ -74,7 +75,7 @@ int main(int argc, char** argv) {
     // 飞往目标点2 避障
     factory.registerSimpleCondition("FlyToPosition2",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "FlyToPosition2" << RESET << endl;
+            cout << BT_FLAG << YELLOW << "FlyToPosition2" << RESET << endl;
 
             offb_ctr.path_planning(-10, -15, 0);
             return BT::NodeStatus::SUCCESS;
@@ -83,7 +84,7 @@ int main(int argc, char** argv) {
     // 飞往目标点3 避障
     factory.registerSimpleCondition("FlyToPosition3",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "FlyToPosition3" << RESET << endl;
+            cout << BT_FLAG << YELLOW << "FlyToPosition3" << RESET << endl;
 
             offb_ctr.path_planning(-15, 0, 0);
             return BT::NodeStatus::SUCCESS;
@@ -92,7 +93,7 @@ int main(int argc, char** argv) {
     // 搜寻目标  理论上由神经网络检测，实际上是我用想象力检测
     factory.registerSimpleCondition("SearchTarget",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "Searching target..." << RESET << endl;
+            cout << BT_FLAG << YELLOW << "Searching target..." << RESET << endl;
 
             // 战术悬停
             std::promise<bool> prom = std::promise<bool>();
@@ -116,7 +117,7 @@ int main(int argc, char** argv) {
     // 飞往地面载具  暂时没有地面载具
     factory.registerSimpleCondition("FlyToCar",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "FlyToCar" << RESET << endl;
+            cout << BT_FLAG << YELLOW << "FlyToCar" << RESET << endl;
 
             offb_ctr.path_planning(0, 0, 0);
             return BT::NodeStatus::SUCCESS;
@@ -125,7 +126,7 @@ int main(int argc, char** argv) {
     // 降落  理论上应该有视觉伺服精准降落，现在是随便落
     factory.registerSimpleCondition("Land",
         [&](BT::TreeNode& self) {
-            cout << YELLOW << "Landing" << RESET << endl;
+            cout << BT_FLAG << YELLOW << "Landing" << RESET << endl;
 
             offb_ctr.land();
             offb_ctr.disarm();

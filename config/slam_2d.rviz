@@ -5,6 +5,7 @@ Panels:
     Property Tree Widget:
       Expanded:
         - /Global Options1
+        - /TF1
         - /TF1/Frames1
         - /DepthCloud1/Auto Size1
       Splitter Ratio: 0.6527777910232544
@@ -90,16 +91,24 @@ Visualization Manager:
           Value: true
         base_link_frd:
           Value: true
+        body:
+          Value: false
+        camera_link:
+          Value: false
+        depth_camera_base:
+          Value: false
         map:
           Value: true
         map_ned:
-          Value: true
+          Value: false
         odmo_2d:
           Value: true
         odom:
-          Value: true
+          Value: false
         odom_ned:
-          Value: true
+          Value: false
+        world:
+          Value: false
       Marker Alpha: 1
       Marker Scale: 1
       Name: TF
@@ -114,6 +123,11 @@ Visualization Manager:
             base_link:
               base_link_frd:
                 {}
+          world:
+            body:
+              camera_link:
+                depth_camera_base:
+                  {}
         odom:
           odom_ned:
             {}
@@ -359,7 +373,7 @@ Visualization Manager:
   Views:
     Current:
       Class: rviz/Orbit
-      Distance: 31.138442993164062
+      Distance: 48.9969482421875
       Enable Stereo Rendering:
         Stereo Eye Separation: 0.05999999865889549
         Stereo Focal Distance: 1
@@ -367,17 +381,17 @@ Visualization Manager:
         Value: false
       Field of View: 0.7853981852531433
       Focal Point:
-        X: 7.9330668449401855
-        Y: 5.111109733581543
-        Z: 6.022216796875
+        X: 10.155476570129395
+        Y: 16.51174545288086
+        Z: 5.43326997756958
       Focal Shape Fixed Size: true
       Focal Shape Size: 0.05000000074505806
       Invert Z Axis: false
       Name: Current View
       Near Clip Distance: 0.009999999776482582
-      Pitch: 0.6347965002059937
+      Pitch: 0.5847965478897095
       Target Frame: base_link
-      Yaw: 5.550474166870117
+      Yaw: 0.6772876977920532
     Saved: ~
 Window Geometry:
   Displays:
@@ -397,5 +411,5 @@ Window Geometry:
   Views:
     collapsed: false
   Width: 1386
-  X: 405
-  Y: 104
+  X: 323
+  Y: 27
